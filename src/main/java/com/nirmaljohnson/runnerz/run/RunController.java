@@ -13,9 +13,11 @@ import java.util.List;
 public class RunController {
 
     private final RunRepository runRepository;
+    private final RunH2Repository runH2Repository;
 
-    public RunController(RunRepository runRepository) {
+    public RunController(RunRepository runRepository, RunH2Repository runH2Repository) {
         this.runRepository = runRepository;
+        this.runH2Repository = runH2Repository;
     }
 
     @RequestMapping(path = "/api/v1/ping", method = RequestMethod.GET)
@@ -26,30 +28,30 @@ public class RunController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "", method = RequestMethod.POST)
     private String createRun(@Valid @RequestBody Run run){
-        runRepository.save(run);
+        runH2Repository.save(run);
         return "Run created";
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
     private String updateRun(@PathVariable Integer id, @RequestBody Run run){
-        runRepository.update(id, run);
+        runH2Repository.update(id, run);
         return "Run created";
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     private Run getRunById(@PathVariable Integer id){
-        return runRepository.findById(id)
+        return runH2Repository.findById(id)
                 .orElseThrow(RunNotFoundException::new);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     private List<Run> getRuns(){
-        return runRepository.findAll();
+        return runH2Repository.findAll();
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     private String deleteRun(@PathVariable Integer id){
-         runRepository.delete(id);
+        runH2Repository.delete(id);
          return "Run deleted successfully";
     }
 
